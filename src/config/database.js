@@ -3,7 +3,7 @@ module.exports = {
   host: '192.168.99.100',
   username: 'postgres',
   password: 'apenasumshow',
-  database: 'fastfeed-bootcamp',
+  database: 'fastfeet-bootcamp',
   define: {
     timestamps: true,
     underscored: true,
