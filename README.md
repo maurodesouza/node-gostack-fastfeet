@@ -25,7 +25,7 @@
 
 Criar uma aplicação completa (Back-end, Front-end e Mobile) para uma distribuidora, a **Fast Feet** :truck: :truck:
 
-A primeira parte é criar o back-end da **Fast Feet** ultilizando [Nodejs](https://nodejs.org/en/) :tada:
+A primeira parte é criar o back-end da **Fast Feet** utilizando [Nodejs](https://nodejs.org/en/) :tada:
 
 Para saber mais sobre o desafio de cada módulo, veja:
 
