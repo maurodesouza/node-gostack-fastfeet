@@ -34,6 +34,7 @@ class DeliverymanController {
 
   async index(req, res) {
     const deliveryman = await Deliveryman.findAll({
+      where: { dismissed_at: null },
       attributes: ['id', 'name', 'email', 'avatar_id'],
       include: [
         {
@@ -68,6 +69,9 @@ class DeliverymanController {
 
     if (!deliveryman)
       return res.status(400).json({ error: 'Delivery man not found' });
+
+    if (deliveryman.dismissed_at !== null)
+      return res.status(400).json({ error: 'This Delivery man was dismissed' });
 
     return res.json(deliveryman);
   }
@@ -112,6 +116,9 @@ class DeliverymanController {
 
     if (!deliveryman)
       return res.status(400).json({ error: 'Delivery man not found' });
+
+    if (deliveryman.dismissed_at !== null)
+      return res.status(400).json({ error: 'This Delivery man was dismissed' });
 
     const { email } = req.body;
 
