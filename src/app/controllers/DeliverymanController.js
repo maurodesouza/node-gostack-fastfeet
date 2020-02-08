@@ -33,7 +33,17 @@ class DeliverymanController {
   }
 
   async index(req, res) {
-    const deliveryman = await Deliveryman.findAll();
+    const deliveryman = await Deliveryman.findAll({
+      attributes: ['id', 'name', 'email', 'avatar_id'],
+      include: [
+        {
+          model: File,
+          as: 'avatar',
+          attributes: ['name', 'path', 'url'],
+        },
+      ],
+      order: ['created_at'],
+    });
 
     return res.json(deliveryman);
   }
