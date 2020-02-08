@@ -31,6 +31,12 @@ class DeliverymanController {
     });
   }
 
+  async index(req, res) {
+    const deliveryman = await Deliveryman.findAll();
+
+    return res.json(deliveryman);
+  }
+
   async update(req, res) {
     const schema = Yup.object().shape({
       name: Yup.string(),
