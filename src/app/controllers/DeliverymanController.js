@@ -1,4 +1,5 @@
 import * as Yup from 'yup';
+import File from '../models/File';
 import Deliveryman from '../models/Deliveryman';
 
 class DeliverymanController {
@@ -33,6 +34,30 @@ class DeliverymanController {
 
   async index(req, res) {
     const deliveryman = await Deliveryman.findAll();
+
+    return res.json(deliveryman);
+  }
+
+  async show(req, res) {
+    const { id } = req.params;
+
+    if (!Number.isInteger(Number(id)))
+      return res.status(400).json({ error: 'ID invalid' });
+
+    const deliveryman = await Deliveryman.findOne({
+      where: { id },
+      attributes: ['id', 'name', 'email', 'avatar_id'],
+      include: [
+        {
+          model: File,
+          as: 'avatar',
+          attributes: ['name', 'path', 'url'],
+        },
+      ],
+    });
+
+    if (!deliveryman)
+      return res.status(400).json({ error: 'Delivery man not found' });
 
     return res.json(deliveryman);
   }
