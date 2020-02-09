@@ -9,15 +9,18 @@ class RecipientController {
         .email()
         .required(),
       street: Yup.string().required(),
-      number: Yup.number().required(),
+      number: Yup.number()
+        .integer()
+        .required(),
       complement: Yup.string(),
       city: Yup.string().required(),
       state: Yup.string().required(),
       zip_code: Yup.string().required(),
     });
 
-    if (!(await schema.isValid(req.body)))
-      return res.status(400).json({ error: 'Validation fails' });
+    await schema.validate(req.body).catch(({ message }) => {
+      return res.status(400).json({ message });
+    });
 
     const { email, zip_code } = req.body;
 
@@ -60,15 +63,16 @@ class RecipientController {
       name: Yup.string(),
       email: Yup.string().email(),
       street: Yup.string(),
-      number: Yup.number(),
+      number: Yup.number().integer(),
       complement: Yup.string(),
       city: Yup.string(),
       state: Yup.string(),
       zip_code: Yup.string(),
     });
 
-    if (!(await schema.isValid(req.body)))
-      return res.status(400).json({ error: 'Validation fails' });
+    await schema.validate(req.body).catch(({ message }) => {
+      return res.status(400).json({ message });
+    });
 
     const { id, email, zip_code } = req.body;
 

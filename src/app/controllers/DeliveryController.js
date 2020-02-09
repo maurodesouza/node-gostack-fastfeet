@@ -9,13 +9,18 @@ class DeliveryController {
     const { recipient_id, deliveryman_id } = req.body;
 
     const schema = Yup.object().shape({
-      recipient_id: Yup.number().required(),
-      deliveryman_id: Yup.number().required(),
+      recipient_id: Yup.number()
+        .integer()
+        .required(),
+      deliveryman_id: Yup.number()
+        .integer()
+        .required(),
       product: Yup.string().required(),
     });
 
-    if (!(await schema.isValid(req.body)))
-      return res.status(400).json({ error: 'Validation fails' });
+    await schema.validate(req.body).catch(({ message }) => {
+      return res.status(400).json({ message });
+    });
 
     const recipientExist = await Recipient.findByPk(recipient_id);
 

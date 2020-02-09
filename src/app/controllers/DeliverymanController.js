@@ -11,8 +11,9 @@ class DeliverymanController {
         .required(),
     });
 
-    if (!(await schema.isValid(req.body)))
-      return res.status(400).json({ error: 'Validation fails' });
+    await schema.validate(req.body).catch(({ message }) => {
+      return res.status(400).json({ message });
+    });
 
     const { name, email } = req.body;
 
@@ -101,11 +102,12 @@ class DeliverymanController {
     const schema = Yup.object().shape({
       name: Yup.string(),
       email: Yup.string().email(),
-      avatar_id: Yup.number(),
+      avatar_id: Yup.number().integer(),
     });
 
-    if (!(await schema.isValid(req.body)))
-      return res.status(400).json({ error: 'Validation fails' });
+    await schema.validate(req.body).catch(({ message }) => {
+      return res.status(400).json({ message });
+    });
 
     const { id } = req.params;
 

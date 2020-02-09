@@ -5,6 +5,7 @@ import Youch from 'youch';
 import { resolve } from 'path';
 
 import 'express-async-errors';
+import './config/yup';
 import './database';
 
 import routes from './routes';
