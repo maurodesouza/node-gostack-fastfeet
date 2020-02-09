@@ -36,6 +36,58 @@ class DeliveryController {
 
     return res.json(delivery);
   }
+
+  async update(req, res) {
+    const { id: delivery_id } = req.params;
+    const { recipient_id, deliveryman_id, product } = req.body;
+
+    if (!Number.isInteger(Number(delivery_id)))
+      return res.status(400).json({ error: 'ID invalid' });
+
+    if (!(recipient_id || deliveryman_id || product))
+      return res
+        .status(400)
+        .json({ error: "You didn't send nothing to be update" });
+
+    const schema = Yup.object().shape({
+      recipient_id: Yup.number().integer(),
+      deliveryman_id: Yup.number().integer(),
+      product: Yup.string(),
+    });
+
+    await schema.validate(req.body).catch(({ message }) => {
+      return res.status(400).json({ message });
+    });
+
+    const delivery = await Delivery.findOne({
+      where: {
+        id: delivery_id,
+        start_date: null,
+        end_date: null,
+        canceled_at: null,
+      },
+    });
+
+    if (!delivery) return res.status(400).json({ error: 'Delivery not found' });
+
+    if (recipient_id && delivery.recipient_id !== recipient_id) {
+      const recipientExist = await Recipient.findByPk(recipient_id);
+
+      if (!recipientExist)
+        return res.status(400).json({ error: 'Recipient not found' });
+    }
+
+    if (deliveryman_id && delivery.deliveryman_id !== deliveryman_id) {
+      const deliverymanExist = await Deliveryman.findByPk(deliveryman_id);
+
+      if (!deliverymanExist)
+        return res.status(400).json({ error: 'Deliveryman not found' });
+    }
+
+    const deliveryUpdate = await delivery.update(req.body);
+
+    return res.json(deliveryUpdate);
+  }
 }
 
 export default new DeliveryController();
