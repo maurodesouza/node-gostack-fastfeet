@@ -77,27 +77,6 @@ class DeliverymanController {
     return res.json(deliveryman);
   }
 
-  async delete(req, res) {
-    const { id } = req.params;
-
-    if (!Number.isInteger(Number(id)))
-      return res.status(400).json({ error: 'ID invalid' });
-
-    const deliveryman = await Deliveryman.findByPk(id);
-
-    if (!deliveryman)
-      return res.status(400).json({ error: 'Delivery man not found' });
-
-    if (deliveryman.dismissed_at !== null)
-      return res.status(400).json({ error: 'Delivery man already dismissed' });
-
-    deliveryman.dismissed_at = new Date();
-
-    await deliveryman.save();
-
-    return res.json(deliveryman);
-  }
-
   async update(req, res) {
     const schema = Yup.object().shape({
       name: Yup.string(),
