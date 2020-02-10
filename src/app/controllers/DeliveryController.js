@@ -28,7 +28,9 @@ class DeliveryController {
     if (!recipientExist)
       return res.status(400).json({ error: 'Recipient not found' });
 
-    const deliverymanExist = await Deliveryman.findByPk(deliveryman_id);
+    const deliverymanExist = await Deliveryman.findOne({
+      where: { id: deliveryman_id, dismissed_at: null },
+    });
 
     if (!deliverymanExist)
       return res.status(400).json({ error: 'Deliveryman not found' });
@@ -158,7 +160,9 @@ class DeliveryController {
     }
 
     if (deliveryman_id && delivery.deliveryman_id !== deliveryman_id) {
-      const deliverymanExist = await Deliveryman.findByPk(deliveryman_id);
+      const deliverymanExist = await Deliveryman.findOne({
+        where: { id: deliveryman_id, dismissed_at: null },
+      });
 
       if (!deliverymanExist)
         return res.status(400).json({ error: 'Deliveryman not found' });
