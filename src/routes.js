@@ -7,7 +7,9 @@ import authMiddlware from './app/middleware/auth';
 import SessionController from './app/controllers/SessionController';
 import RecipientController from './app/controllers/RecipientController';
 import FileController from './app/controllers/FileController';
+
 import TaskStoreController from './app/controllers/TaskStoreController';
+import TaskCompletedController from './app/controllers/TaskCompletedController';
 
 import DeliverymanController from './app/controllers/DeliverymanController';
 import DeliverymanDismissedController from './app/controllers/DeliverymanDismissedController';
@@ -26,6 +28,11 @@ routes.get('/deliveryman/:id/deliveries/store', TaskStoreController.index);
 routes.get(
   '/deliveryman/:id/deliveries/:delivery_id/store',
   TaskStoreController.show
+);
+
+routes.get(
+  '/deliveryman/:id/deliveries/completed',
+  TaskCompletedController.index
 );
 
 routes.use(authMiddlware);
