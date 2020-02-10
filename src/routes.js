@@ -11,6 +11,7 @@ import FileController from './app/controllers/FileController';
 import TaskStoreController from './app/controllers/TaskStoreController';
 import TaskCompletedController from './app/controllers/TaskCompletedController';
 import TaskWithdrawnController from './app/controllers/TaskWithdrawnController';
+import TaskCanceledController from './app/controllers/TaskCanceledController';
 
 import DeliverymanController from './app/controllers/DeliverymanController';
 import DeliverymanDismissedController from './app/controllers/DeliverymanDismissedController';
@@ -34,6 +35,11 @@ routes.get(
 routes.get(
   '/deliveryman/:id/deliveries/completed',
   TaskCompletedController.index
+);
+
+routes.get(
+  '/deliveryman/:id/deliveries/canceled',
+  TaskCanceledController.index
 );
 
 routes.get(
