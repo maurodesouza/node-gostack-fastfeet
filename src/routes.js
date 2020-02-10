@@ -10,6 +10,7 @@ import FileController from './app/controllers/FileController';
 
 import TaskStoreController from './app/controllers/TaskStoreController';
 import TaskCompletedController from './app/controllers/TaskCompletedController';
+import TaskWithdrawnController from './app/controllers/TaskWithdrawnController';
 
 import DeliverymanController from './app/controllers/DeliverymanController';
 import DeliverymanDismissedController from './app/controllers/DeliverymanDismissedController';
@@ -33,6 +34,15 @@ routes.get(
 routes.get(
   '/deliveryman/:id/deliveries/completed',
   TaskCompletedController.index
+);
+
+routes.get(
+  '/deliveryman/:id/deliveries/withdrawn',
+  TaskWithdrawnController.index
+);
+routes.get(
+  '/deliveryman/:id/deliveries/:delivery_id/withdrawn',
+  TaskWithdrawnController.show
 );
 
 routes.use(authMiddlware);
