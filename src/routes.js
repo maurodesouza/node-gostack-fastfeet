@@ -11,6 +11,7 @@ import DeliverymanController from './app/controllers/DeliverymanController';
 import DeliveryController from './app/controllers/DeliveryController';
 import DeliveryCanceledController from './app/controllers/DeliveryCanceledController';
 import DeliveryCompletedController from './app/controllers/DeliveryCompletedController';
+import DeliveryWithdrawnController from './app/controllers/DeliveryWithdrawnController';
 
 const routes = new Router();
 const upload = multer(multerConfig);
@@ -37,6 +38,9 @@ routes.get('/deliveries/:id/canceled', DeliveryCanceledController.show);
 
 routes.get('/deliveries/completed', DeliveryCompletedController.index);
 routes.get('/deliveries/:id/completed', DeliveryCompletedController.show);
+
+routes.get('/deliveries/withdrawn', DeliveryWithdrawnController.index);
+routes.get('/deliveries/:id/withdrawn', DeliveryWithdrawnController.show);
 
 routes.post('/recipient', RecipientController.store);
 routes.put('/recipient', RecipientController.update);
