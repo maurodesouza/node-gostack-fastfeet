@@ -9,7 +9,7 @@ import RecipientController from './app/controllers/RecipientController';
 import FileController from './app/controllers/FileController';
 import DeliverymanDismissedController from './app/controllers/DeliverymanDismissedController';
 import DeliverymanController from './app/controllers/DeliverymanController';
-import DeliveryController from './app/controllers/DeliveryController';
+import DeliveryStoreController from './app/controllers/DeliveryStoreController';
 import DeliveryCanceledController from './app/controllers/DeliveryCanceledController';
 import DeliveryCompletedController from './app/controllers/DeliveryCompletedController';
 import DeliveryWithdrawnController from './app/controllers/DeliveryWithdrawnController';
@@ -19,9 +19,14 @@ const upload = multer(multerConfig);
 
 routes.post('/session', SessionController.store);
 
+routes.get('/deliveryman/:id/deliveries');
+
 routes.use(authMiddlware);
 
 routes.post('/files', upload.single('file'), FileController.store);
+
+routes.post('/recipient', RecipientController.store);
+routes.put('/recipient', RecipientController.update);
 
 routes.post('/employees/deliveryman', DeliverymanController.store);
 routes.get('/employees/deliveryman', DeliverymanController.index);
@@ -34,10 +39,10 @@ routes.get(
 );
 routes.delete('/deliveryman/:id', DeliverymanDismissedController.delete);
 
-routes.post('/deliveries', DeliveryController.store);
-routes.get('/deliveries/store', DeliveryController.index);
-routes.get('/deliveries/:id/store', DeliveryController.show);
-routes.put('/deliveries/:id/store', DeliveryController.update);
+routes.post('/deliveries/store', DeliveryStoreController.store);
+routes.get('/deliveries/store', DeliveryStoreController.index);
+routes.get('/deliveries/:id/store', DeliveryStoreController.show);
+routes.put('/deliveries/:id/store', DeliveryStoreController.update);
 
 routes.get('/deliveries/canceled', DeliveryCanceledController.index);
 routes.get('/deliveries/:id/canceled', DeliveryCanceledController.show);
@@ -47,8 +52,5 @@ routes.get('/deliveries/:id/completed', DeliveryCompletedController.show);
 
 routes.get('/deliveries/withdrawn', DeliveryWithdrawnController.index);
 routes.get('/deliveries/:id/withdrawn', DeliveryWithdrawnController.show);
-
-routes.post('/recipient', RecipientController.store);
-routes.put('/recipient', RecipientController.update);
 
 export default routes;
