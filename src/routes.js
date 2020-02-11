@@ -49,6 +49,11 @@ routes.get(
   '/deliveryman/:id/deliveries/completed',
   TaskCompletedController.index
 );
+routes.put(
+  '/deliveryman/:deliveryman_id/deliveries/:delivery_id/completed',
+  upload.single('file'),
+  DeliveryCompletedController.update
+);
 
 routes.get(
   '/deliveryman/:id/deliveries/canceled',
