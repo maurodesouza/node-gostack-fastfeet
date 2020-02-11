@@ -33,6 +33,19 @@ routes.get(
 );
 
 routes.get(
+  '/deliveryman/:id/deliveries/withdrawn',
+  TaskWithdrawnController.index
+);
+routes.get(
+  '/deliveryman/:id/deliveries/:delivery_id/withdrawn',
+  TaskWithdrawnController.show
+);
+routes.put(
+  '/deliveryman/:deliveryman_id/deliveries/:delivery_id/withdrawn',
+  DeliveryWithdrawnController.update
+);
+
+routes.get(
   '/deliveryman/:id/deliveries/completed',
   TaskCompletedController.index
 );
@@ -40,15 +53,6 @@ routes.get(
 routes.get(
   '/deliveryman/:id/deliveries/canceled',
   TaskCanceledController.index
-);
-
-routes.get(
-  '/deliveryman/:id/deliveries/withdrawn',
-  TaskWithdrawnController.index
-);
-routes.get(
-  '/deliveryman/:id/deliveries/:delivery_id/withdrawn',
-  TaskWithdrawnController.show
 );
 
 routes.use(authMiddlware);
