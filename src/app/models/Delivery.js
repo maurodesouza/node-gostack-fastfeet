@@ -17,7 +17,7 @@ class Delivery extends Model {
     return this;
   }
 
-  static associate({ File, Recipient, Deliveryman }) {
+  static associate({ File, Recipient, Deliveryman, DeliveryProblems }) {
     this.belongsTo(Recipient, {
       foreignKey: 'recipient_id',
       as: 'recipient',
@@ -31,6 +31,11 @@ class Delivery extends Model {
     this.belongsTo(File, {
       foreignKey: 'signature_id',
       as: 'signature',
+    });
+
+    this.hasMany(DeliveryProblems, {
+      foreignKey: 'delivery_id',
+      as: 'delivery_problems',
     });
   }
 }
