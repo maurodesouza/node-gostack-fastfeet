@@ -99,5 +99,9 @@ routes.get('/deliveries/withdrawn', DeliveryWithdrawnController.index);
 routes.get('/deliveries/:id/withdrawn', DeliveryWithdrawnController.show);
 
 routes.get('/deliveries/problems', DeliveryProblemsController.index);
+routes.get(
+  '/deliveries/:delivery_id/problems',
+  DeliveryProblemsController.show
+);
 
 export default routes;
