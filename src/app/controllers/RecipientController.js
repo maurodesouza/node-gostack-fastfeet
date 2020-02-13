@@ -18,9 +18,11 @@ class RecipientController {
       zip_code: Yup.string().required(),
     });
 
-    await schema.validate(req.body).catch(({ message }) => {
+    try {
+      await schema.validate(req.body);
+    } catch ({ message }) {
       return res.status(400).json({ message });
-    });
+    }
 
     const { email, zip_code } = req.body;
 
@@ -70,9 +72,11 @@ class RecipientController {
       zip_code: Yup.string(),
     });
 
-    await schema.validate(req.body).catch(({ message }) => {
+    try {
+      await schema.validate(req.body);
+    } catch ({ message }) {
       return res.status(400).json({ message });
-    });
+    }
 
     const { id, email, zip_code } = req.body;
 

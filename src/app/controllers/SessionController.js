@@ -13,9 +13,11 @@ class SessionController {
       password: Yup.string().required(),
     });
 
-    await schema.validate(req.body).catch(({ message }) => {
+    try {
+      await schema.validate(req.body);
+    } catch ({ message }) {
       return res.status(400).json({ message });
-    });
+    }
 
     const { email, password } = req.body;
 

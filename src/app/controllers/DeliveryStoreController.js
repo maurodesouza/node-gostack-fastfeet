@@ -19,9 +19,11 @@ class DeliveryController {
       product: Yup.string().required(),
     });
 
-    await schema.validate(req.body).catch(({ message }) => {
+    try {
+      await schema.validate(req.body);
+    } catch ({ message }) {
       return res.status(400).json({ message });
-    });
+    }
 
     const recipientExist = await Recipient.findByPk(recipient_id);
 
@@ -137,9 +139,11 @@ class DeliveryController {
       product: Yup.string(),
     });
 
-    await schema.validate(req.body).catch(({ message }) => {
+    try {
+      await schema.validate(req.body);
+    } catch ({ message }) {
       return res.status(400).json({ message });
-    });
+    }
 
     const delivery = await Delivery.findOne({
       where: {

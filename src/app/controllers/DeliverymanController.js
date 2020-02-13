@@ -11,9 +11,11 @@ class DeliverymanController {
         .required(),
     });
 
-    await schema.validate(req.body).catch(({ message }) => {
+    try {
+      await schema.validate(req.body);
+    } catch ({ message }) {
       return res.status(400).json({ message });
-    });
+    }
 
     const { name, email } = req.body;
 
@@ -84,9 +86,11 @@ class DeliverymanController {
       avatar_id: Yup.number().integer(),
     });
 
-    await schema.validate(req.body).catch(({ message }) => {
+    try {
+      await schema.validate(req.body);
+    } catch ({ message }) {
       return res.status(400).json({ message });
-    });
+    }
 
     const { id } = req.params;
 
