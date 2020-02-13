@@ -103,5 +103,9 @@ routes.get(
   '/deliveries/:delivery_id/problems',
   DeliveryProblemsController.show
 );
+routes.put(
+  '/deliveries/problems/:problem_id/cancel-delivery',
+  DeliveryProblemsController.update
+);
 
 export default routes;

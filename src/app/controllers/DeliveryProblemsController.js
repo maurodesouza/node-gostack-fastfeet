@@ -95,6 +95,30 @@ class DeliveryProblemsController {
 
     return res.json(delivery.delivery_problems);
   }
+
+  async update(req, res) {
+    const { problem_id } = req.params;
+
+    if (!Number.isInteger(Number(problem_id)))
+      return res.status(400).json({ error: 'Problem ID invalid' });
+
+    const problem = await DeliveryProblem.findByPk(problem_id);
+
+    if (!problem) return res.status(400).json({ error: 'Problem not found' });
+
+    const { delivery_id } = problem;
+
+    const delivery = await Delivery.findOne({
+      where: { id: delivery_id, end_date: null },
+    });
+
+    if (delivery.canceled_at)
+      return res.status(400).json({ error: 'Delivery already canceled' });
+
+    const deliveryCanceled = await delivery.update({ canceled_at: new Date() });
+
+    return res.json(deliveryCanceled);
+  }
 }
 
 export default new DeliveryProblemsController();
