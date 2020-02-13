@@ -1,5 +1,7 @@
 import * as Yup from 'yup';
 
+import Mail from '../../lib/Mail';
+
 import File from '../models/File';
 import Delivery from '../models/Delivery';
 import Recipient from '../models/Recipient';
@@ -30,14 +32,20 @@ class DeliveryController {
     if (!recipientExist)
       return res.status(400).json({ error: 'Recipient not found' });
 
-    const deliverymanExist = await Deliveryman.findOne({
+    const deliveryman = await Deliveryman.findOne({
       where: { id: deliveryman_id, dismissed_at: null },
     });
 
-    if (!deliverymanExist)
+    if (!deliveryman)
       return res.status(400).json({ error: 'Deliveryman not found' });
 
     const delivery = await Delivery.create(req.body);
+
+    await Mail.sendMail({
+      to: `${deliveryman.name} <${deliveryman.email}>`,
+      subject: 'Você tem uma nova entrega',
+      text: 'Você tem uma nova entrega',
+    });
 
     return res.json(delivery);
   }
