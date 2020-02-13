@@ -20,6 +20,7 @@ import DeliveryStoreController from './app/controllers/DeliveryStoreController';
 import DeliveryCanceledController from './app/controllers/DeliveryCanceledController';
 import DeliveryCompletedController from './app/controllers/DeliveryCompletedController';
 import DeliveryWithdrawnController from './app/controllers/DeliveryWithdrawnController';
+import DeliveryProblemsController from './app/controllers/DeliveryProblemsController';
 
 const routes = new Router();
 const upload = multer(multerConfig);
@@ -58,6 +59,11 @@ routes.put(
 routes.get(
   '/deliveryman/:id/deliveries/canceled',
   TaskCanceledController.index
+);
+
+routes.post(
+  '/deliveryman/:deliveryman_id/delivery/:delivery_id/problems',
+  DeliveryProblemsController.store
 );
 
 routes.use(authMiddlware);
