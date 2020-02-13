@@ -46,6 +46,31 @@ class DeliveryProblemsController {
 
     return res.json(problem);
   }
+
+  async index(req, res) {
+    const deliveries = await Delivery.findAll({
+      where: { canceled_at: null, end_date: null },
+      attributes: [
+        'id',
+        'product',
+        'start_date',
+        'deliveryman_id',
+        'recipient_id',
+      ],
+      include: [
+        {
+          association: 'delivery_problems',
+          attributes: ['id', 'description'],
+        },
+      ],
+    });
+
+    const deliveriesWithProblems = deliveries.filter(
+      delivery => delivery.delivery_problems.length
+    );
+
+    return res.json(deliveriesWithProblems);
+  }
 }
 
 export default new DeliveryProblemsController();

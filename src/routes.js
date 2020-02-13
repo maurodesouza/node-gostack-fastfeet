@@ -98,4 +98,6 @@ routes.get('/deliveries/:id/completed', DeliveryCompletedController.show);
 routes.get('/deliveries/withdrawn', DeliveryWithdrawnController.index);
 routes.get('/deliveries/:id/withdrawn', DeliveryWithdrawnController.show);
 
+routes.get('/deliveries/problems', DeliveryProblemsController.index);
+
 export default routes;
