@@ -1,7 +1,7 @@
 import * as Yup from 'yup';
 
 import Queue from '../../lib/Queue';
-import newDelivery from '../jobs/newDelivery';
+import newDelivery from '../jobs/NewDelivery';
 
 import File from '../models/File';
 import Delivery from '../models/Delivery';

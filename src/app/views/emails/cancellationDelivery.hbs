@@ -1,0 +1,32 @@
+<h2> Olá {{ deliveryman }}, </h2>
+
+<br/>
+
+<h3 style="font-weight: bold;margin: 40px 0;display:block"> Você teve uma entrega cancelada ! </h3>
+
+</br>
+
+<h3 style="font-weight: bold;margin: 20px 0;display:block"> Dados da entrega </h3>
+
+</br>
+
+{{#each delivery }}
+
+  <p style="margin-left: 10px;">
+    <spam style="font-weight: bold;text-transform:capitalize"> {{ @key }} :</spam>
+    {{ this }}
+  </p>
+
+{{/each }}
+
+</br>
+
+
+<h3 style="font-weight: bold;margin: 20px 0;display:block"> Motivo </h3>
+
+</br>
+
+  <p style="margin-left: 10px;"> {{ problem }} </p>
+
+</br>
+

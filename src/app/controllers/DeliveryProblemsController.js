@@ -1,5 +1,8 @@
 import * as Yup from 'yup';
 
+import Queue from '../../lib/Queue';
+import CancellationDelivery from '../jobs/CancellationDelivery';
+
 import Delivery from '../models/Delivery';
 import Deliveryman from '../models/Deliveryman';
 import DeliveryProblem from '../models/DeliveryProblem';
@@ -106,16 +109,34 @@ class DeliveryProblemsController {
 
     if (!problem) return res.status(400).json({ error: 'Problem not found' });
 
-    const { delivery_id } = problem;
+    const { delivery_id, description } = problem;
 
     const delivery = await Delivery.findOne({
-      where: { id: delivery_id, end_date: null },
+      where: { id: delivery_id },
+      include: [
+        {
+          model: Deliveryman,
+          as: 'deliveryman',
+          attributes: ['name', 'email'],
+        },
+      ],
     });
+
+    if (delivery.end_date)
+      return res.status(400).json({
+        error: 'You can not cancel a delivery that already completed',
+      });
 
     if (delivery.canceled_at)
       return res.status(400).json({ error: 'Delivery already canceled' });
 
     const deliveryCanceled = await delivery.update({ canceled_at: new Date() });
+
+    await Queue.add(CancellationDelivery.key, {
+      deliveryman: delivery.deliveryman,
+      delivery,
+      problem: description,
+    });
 
     return res.json(deliveryCanceled);
   }
