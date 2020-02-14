@@ -1,5 +1,8 @@
 import * as Yup from 'yup';
 
+import { format } from 'date-fns';
+import pt from 'date-fns/locale/pt-BR';
+
 import Mail from '../../lib/Mail';
 
 import File from '../models/File';
@@ -27,9 +30,9 @@ class DeliveryController {
       return res.status(400).json({ message });
     }
 
-    const recipientExist = await Recipient.findByPk(recipient_id);
+    const recipient = await Recipient.findByPk(recipient_id);
 
-    if (!recipientExist)
+    if (!recipient)
       return res.status(400).json({ error: 'Recipient not found' });
 
     const deliveryman = await Deliveryman.findOne({
@@ -41,10 +44,42 @@ class DeliveryController {
 
     const delivery = await Delivery.create(req.body);
 
+    const {
+      name,
+      street,
+      number,
+      complement,
+      city,
+      state,
+      zip_code,
+    } = recipient;
+
     await Mail.sendMail({
       to: `${deliveryman.name} <${deliveryman.email}>`,
       subject: 'Você tem uma nova entrega',
-      text: 'Você tem uma nova entrega',
+      template: 'newDelivery',
+      context: {
+        deliveryman: deliveryman.name,
+        delivery: {
+          produto: delivery.product,
+          'cadastrado em': format(
+            delivery.createdAt,
+            "dd 'de' MMMM 'às' H:mm'h'",
+            {
+              locale: pt,
+            }
+          ),
+        },
+        recipient: {
+          para: name,
+          rua: street,
+          numero: number,
+          complemento: complement || 'Não possui',
+          cidade: city,
+          estado: state,
+          CEP: zip_code,
+        },
+      },
     });
 
     return res.json(delivery);

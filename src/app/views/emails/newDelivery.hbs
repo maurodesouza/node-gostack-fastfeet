@@ -1,0 +1,39 @@
+<h2> Olá {{ deliveryman }}, </h2>
+
+<br/>
+
+<h3 style="font-weight: bold;margin: 40px 0;display:block"> Você possui uma nova entrega ! </h3>
+
+</br>
+
+<h3 style="font-weight: bold;margin: 20px 0;display:block"> Dados da entrega </h3>
+
+</br>
+
+{{#each delivery }}
+
+  <p style="margin-left: 10px;">
+    <spam style="font-weight: bold;text-transform:capitalize"> {{ @key }} :</spam>
+    {{ this }}
+  </p>
+
+{{/each }}
+
+</br>
+
+
+<h3 style="font-weight: bold;margin: 20px 0;display:block"> Dados do destinatario </h3>
+
+</br>
+
+  {{#each recipient }}
+
+  <p style="margin-left: 10px;">
+    <spam style="font-weight: bold;text-transform:capitalize"> {{ @key }} :</spam>
+    {{ this }}
+  </p>
+
+  {{/each }}
+
+</br>
+
