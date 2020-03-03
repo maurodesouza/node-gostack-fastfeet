@@ -38,6 +38,6 @@ module.exports = {
   },
 
   down: queryInterface => {
-    return queryInterface.dropTable('deliveryman');
+    return queryInterface.dropTable('deliverymans');
   },
 };
