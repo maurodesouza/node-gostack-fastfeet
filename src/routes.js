@@ -14,8 +14,6 @@ import TaskWithdrawnController from './app/controllers/TaskWithdrawnController';
 import TaskCanceledController from './app/controllers/TaskCanceledController';
 
 import DeliverymanController from './app/controllers/DeliverymanController';
-import DeliverymanDismissedController from './app/controllers/DeliverymanDismissedController';
-
 import DeliveryController from './app/controllers/DeliveryController';
 
 import DeliveryCompletedController from './app/controllers/DeliveryCompletedController';
@@ -73,16 +71,11 @@ routes.post('/files', upload.single('file'), FileController.store);
 routes.post('/recipient', RecipientController.store);
 routes.put('/recipient', RecipientController.update);
 
-routes.post('/employees/deliveryman', DeliverymanController.store);
-routes.get('/employees/deliveryman', DeliverymanController.index);
+routes.post('/deliveryman', DeliverymanController.store);
+routes.get('/deliveryman', DeliverymanController.index);
 routes.get('/deliveryman/:id', DeliverymanController.show);
 routes.put('/deliveryman/:id', DeliverymanController.update);
-
-routes.get(
-  '/employees/dismissed/deliveryman',
-  DeliverymanDismissedController.index
-);
-routes.delete('/deliveryman/:id', DeliverymanDismissedController.delete);
+routes.delete('/deliveryman/:id', DeliverymanController.delete);
 
 routes.post('/deliveries', DeliveryController.store);
 routes.get('/deliveries', DeliveryController.index);

@@ -1,4 +1,6 @@
 import * as Yup from 'yup';
+import { Op } from 'sequelize';
+
 import File from '../models/File';
 import Deliveryman from '../models/Deliveryman';
 
@@ -36,9 +38,15 @@ class DeliverymanController {
   }
 
   async index(req, res) {
+    const { state } = req.query;
+
+    const find =
+      state === 'dismissed'
+        ? { dismissed_at: { [Op.ne]: null } }
+        : { dismissed_at: null };
+
     const deliveryman = await Deliveryman.findAll({
-      where: { dismissed_at: null },
-      attributes: ['id', 'name', 'email', 'avatar_id'],
+      where: find,
       include: [
         {
           model: File,
@@ -119,6 +127,27 @@ class DeliverymanController {
     const deliverymanUpdate = await deliveryman.update(req.body);
 
     return res.json(deliverymanUpdate);
+  }
+
+  async delete(req, res) {
+    const { id } = req.params;
+
+    if (!Number.isInteger(Number(id)))
+      return res.status(400).json({ error: 'ID invalid' });
+
+    const deliveryman = await Deliveryman.findByPk(id);
+
+    if (!deliveryman)
+      return res.status(400).json({ error: 'Delivery man not found' });
+
+    if (deliveryman.dismissed_at !== null)
+      return res.status(400).json({ error: 'Delivery man already dismissed' });
+
+    deliveryman.dismissed_at = new Date();
+
+    await deliveryman.save();
+
+    return res.json();
   }
 }
 
