@@ -1,4 +1,5 @@
 import * as Yup from 'yup';
+import { Op } from 'sequelize';
 
 import Queue from '../../lib/Queue';
 import newDelivery from '../jobs/NewDelivery';
@@ -52,10 +53,30 @@ class DeliveryController {
   }
 
   async index(req, res) {
+    const { state } = req.query;
+
+    const data = {
+      canceled: {
+        canceled_at: { [Op.ne]: null },
+      },
+      completed: {
+        end_date: { [Op.ne]: null },
+      },
+      stored: {
+        start_date: null,
+      },
+      withdrawn: {
+        start_date: { [Op.ne]: null },
+      },
+    };
+
     const deliveries = await Delivery.findAll({
-      where: { start_date: null, end_date: null, canceled_at: null },
-      attributes: ['id', 'deliveryman_id', 'recipient_id', 'product'],
+      where: data[state],
       include: [
+        {
+          association: 'delivery_problems',
+          attributes: ['id', 'description'],
+        },
         {
           model: Recipient,
           as: 'recipient',
@@ -77,11 +98,19 @@ class DeliveryController {
       order: ['created_at'],
     });
 
+    if (state === 'problems') {
+      const deliveriesWithProblems = deliveries.filter(
+        delivery => delivery.delivery_problems.length
+      );
+
+      return res.json(deliveriesWithProblems);
+    }
+
     return res.json(deliveries);
   }
 
   async show(req, res) {
-    const { id: delivery_id } = req.params;
+    const { delivery_id } = req.params;
 
     if (!Number.isInteger(Number(delivery_id)))
       return res.status(400).json({ error: 'ID invalid' });
@@ -89,12 +118,12 @@ class DeliveryController {
     const delivery = await Delivery.findOne({
       where: {
         id: delivery_id,
-        start_date: null,
-        end_date: null,
-        canceled_at: null,
       },
-      attributes: ['id', 'deliveryman_id', 'recipient_id', 'product'],
       include: [
+        {
+          association: 'delivery_problems',
+          attributes: ['id', 'description', 'created_at'],
+        },
         {
           model: Recipient,
           as: 'recipient',
@@ -131,7 +160,7 @@ class DeliveryController {
   }
 
   async update(req, res) {
-    const { id: delivery_id } = req.params;
+    const { delivery_id } = req.params;
     const { recipient_id, deliveryman_id, product } = req.body;
 
     if (!Number.isInteger(Number(delivery_id)))

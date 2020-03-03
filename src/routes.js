@@ -16,8 +16,8 @@ import TaskCanceledController from './app/controllers/TaskCanceledController';
 import DeliverymanController from './app/controllers/DeliverymanController';
 import DeliverymanDismissedController from './app/controllers/DeliverymanDismissedController';
 
-import DeliveryStoreController from './app/controllers/DeliveryStoreController';
-import DeliveryCanceledController from './app/controllers/DeliveryCanceledController';
+import DeliveryController from './app/controllers/DeliveryController';
+
 import DeliveryCompletedController from './app/controllers/DeliveryCompletedController';
 import DeliveryWithdrawnController from './app/controllers/DeliveryWithdrawnController';
 import DeliveryProblemsController from './app/controllers/DeliveryProblemsController';
@@ -62,7 +62,7 @@ routes.get(
 );
 
 routes.post(
-  '/deliveryman/:deliveryman_id/delivery/:delivery_id/problems',
+  '/deliveryman/:deliveryman_id/problems',
   DeliveryProblemsController.store
 );
 
@@ -84,27 +84,13 @@ routes.get(
 );
 routes.delete('/deliveryman/:id', DeliverymanDismissedController.delete);
 
-routes.post('/deliveries/store', DeliveryStoreController.store);
-routes.get('/deliveries/store', DeliveryStoreController.index);
-routes.get('/deliveries/:id/store', DeliveryStoreController.show);
-routes.put('/deliveries/:id/store', DeliveryStoreController.update);
+routes.post('/deliveries', DeliveryController.store);
+routes.get('/deliveries', DeliveryController.index);
+routes.get('/deliveries/:delivery_id', DeliveryController.show);
+routes.put('/deliveries/:delivery_id', DeliveryController.update);
 
-routes.get('/deliveries/canceled', DeliveryCanceledController.index);
-routes.get('/deliveries/:id/canceled', DeliveryCanceledController.show);
-
-routes.get('/deliveries/completed', DeliveryCompletedController.index);
-routes.get('/deliveries/:id/completed', DeliveryCompletedController.show);
-
-routes.get('/deliveries/withdrawn', DeliveryWithdrawnController.index);
-routes.get('/deliveries/:id/withdrawn', DeliveryWithdrawnController.show);
-
-routes.get('/deliveries/problems', DeliveryProblemsController.index);
-routes.get(
-  '/deliveries/:delivery_id/problems',
-  DeliveryProblemsController.show
-);
 routes.put(
-  '/deliveries/problems/:problem_id/cancel-delivery',
+  '/problems/:problem_id/cancel-delivery',
   DeliveryProblemsController.update
 );
 
