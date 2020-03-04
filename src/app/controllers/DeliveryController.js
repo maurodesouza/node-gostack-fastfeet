@@ -53,7 +53,7 @@ class DeliveryController {
   }
 
   async index(req, res) {
-    const { state } = req.query;
+    const { state, q } = req.query;
 
     const data = {
       canceled: {
@@ -71,7 +71,10 @@ class DeliveryController {
     };
 
     const deliveries = await Delivery.findAll({
-      where: data[state],
+      where: {
+        product: { [Op.iRegexp]: q },
+        ...data[state],
+      },
       include: [
         {
           association: 'delivery_problems',

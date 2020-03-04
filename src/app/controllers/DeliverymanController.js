@@ -38,7 +38,7 @@ class DeliverymanController {
   }
 
   async index(req, res) {
-    const { state } = req.query;
+    const { state, q } = req.query;
 
     const find =
       state === 'dismissed'
@@ -46,7 +46,10 @@ class DeliverymanController {
         : { dismissed_at: null };
 
     const deliveryman = await Deliveryman.findAll({
-      where: find,
+      where: {
+        name: { [Op.iRegexp]: q },
+        ...find,
+      },
       include: [
         {
           model: File,
