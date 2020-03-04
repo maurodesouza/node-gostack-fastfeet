@@ -1,4 +1,6 @@
 import * as Yup from 'yup';
+import { Op } from 'sequelize';
+
 import Recipient from '../models/Recipient';
 
 class RecipientController {
@@ -57,6 +59,19 @@ class RecipientController {
       state,
       zip_code,
     });
+  }
+
+  async index(req, res) {
+    const { q } = req.query;
+
+    const recipients = await Recipient.findAll({
+      where: {
+        name: { [Op.iRegexp]: q },
+      },
+      order: ['created_at'],
+    });
+
+    return res.json(recipients);
   }
 
   async update(req, res) {

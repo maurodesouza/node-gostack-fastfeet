@@ -69,6 +69,7 @@ routes.use(authMiddlware);
 routes.post('/files', upload.single('file'), FileController.store);
 
 routes.post('/recipient', RecipientController.store);
+routes.get('/recipient', RecipientController.index);
 routes.put('/recipient', RecipientController.update);
 
 routes.post('/deliveryman', DeliverymanController.store);
