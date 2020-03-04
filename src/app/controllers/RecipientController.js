@@ -118,9 +118,7 @@ class RecipientController {
 
     const recipientUpdated = await recipient.update(req.body);
 
-    return res.json({
-      recipientUpdated,
-    });
+    return res.json(recipientUpdated);
   }
 }
 
