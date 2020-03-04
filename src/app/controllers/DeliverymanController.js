@@ -38,7 +38,7 @@ class DeliverymanController {
   }
 
   async index(req, res) {
-    const { state, q } = req.query;
+    const { state, q, page = 1 } = req.query;
 
     const find =
       state === 'dismissed'
@@ -50,6 +50,8 @@ class DeliverymanController {
         name: { [Op.iRegexp]: q },
         ...find,
       },
+      limit: 20,
+      offset: (page - 1) * 20,
       include: [
         {
           model: File,

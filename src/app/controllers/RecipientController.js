@@ -62,12 +62,14 @@ class RecipientController {
   }
 
   async index(req, res) {
-    const { q } = req.query;
+    const { q, page = 1 } = req.query;
 
     const recipients = await Recipient.findAll({
       where: {
         name: { [Op.iRegexp]: q },
       },
+      limit: 20,
+      offset: (page - 1) * 20,
       order: ['created_at'],
     });
 

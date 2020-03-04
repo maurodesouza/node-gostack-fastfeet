@@ -53,7 +53,7 @@ class DeliveryController {
   }
 
   async index(req, res) {
-    const { state, q } = req.query;
+    const { state, q, page = 1 } = req.query;
 
     const data = {
       canceled: {
@@ -75,6 +75,8 @@ class DeliveryController {
         product: { [Op.iRegexp]: q },
         ...data[state],
       },
+      limit: 20,
+      offset: (page - 1) * 20,
       include: [
         {
           association: 'delivery_problems',
