@@ -75,8 +75,8 @@ class DeliveryController {
         product: { [Op.iRegexp]: q },
         ...data[state],
       },
-      limit: 20,
-      offset: (page - 1) * 20,
+      limit: 10,
+      offset: (page - 1) * 10,
       include: [
         {
           association: 'delivery_problems',
