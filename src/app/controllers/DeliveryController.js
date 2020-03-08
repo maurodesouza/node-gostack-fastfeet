@@ -230,7 +230,7 @@ class DeliveryController {
 
     if (!delivery) return res.status(400).json({ error: 'Delivery not found' });
 
-    await delivery.destroy();
+    delivery.destroy();
 
     return res.json();
   }
