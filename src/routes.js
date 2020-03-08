@@ -82,6 +82,7 @@ routes.post('/deliveries', DeliveryController.store);
 routes.get('/deliveries', DeliveryController.index);
 routes.get('/deliveries/:delivery_id', DeliveryController.show);
 routes.put('/deliveries/:delivery_id', DeliveryController.update);
+routes.delete('/deliveries/:delivery_id', DeliveryController.delete);
 
 routes.put(
   '/problems/:problem_id/cancel-delivery',

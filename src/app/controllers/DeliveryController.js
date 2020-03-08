@@ -219,6 +219,21 @@ class DeliveryController {
 
     return res.json(deliveryUpdate);
   }
+
+  async delete(req, res) {
+    const { delivery_id } = req.params;
+
+    if (!Number.isInteger(Number(delivery_id)))
+      return res.status(400).json({ error: 'ID invalid' });
+
+    const delivery = await Delivery.findByPk(delivery_id);
+
+    if (!delivery) return res.status(400).json({ error: 'Delivery not found' });
+
+    delivery.destroy();
+
+    return res.json();
+  }
 }
 
 export default new DeliveryController();
