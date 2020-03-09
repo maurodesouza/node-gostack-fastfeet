@@ -81,7 +81,10 @@ class DeliveryProblemsController {
     if (delivery.canceled_at)
       return res.status(400).json({ error: 'Delivery already canceled' });
 
-    const deliveryCanceled = await delivery.update({ canceled_at: new Date() });
+    const deliveryCanceled = await delivery.update({
+      canceled_at: new Date(),
+      status: 'cancelada',
+    });
 
     await Queue.add(CancellationDelivery.key, {
       deliveryman: delivery.deliveryman,

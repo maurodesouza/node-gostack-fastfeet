@@ -70,6 +70,7 @@ class DeliveryWithdrawnController {
       return res.status(400).json({ error: 'Delivery already withdrawn' });
 
     delivery.start_date = currentDate;
+    delivery.status = 'retirada';
 
     await delivery.save();
 

@@ -48,6 +48,7 @@ class DeliveryCompletedController {
 
     delivery.signature_id = id;
     delivery.end_date = new Date();
+    delivery.status = 'entregue';
 
     await delivery.save();
 
