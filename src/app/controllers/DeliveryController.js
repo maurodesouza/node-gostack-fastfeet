@@ -55,25 +55,12 @@ class DeliveryController {
   async index(req, res) {
     const { state, q, page = 1 } = req.query;
 
-    const data = {
-      canceled: {
-        canceled_at: { [Op.ne]: null },
-      },
-      completed: {
-        end_date: { [Op.ne]: null },
-      },
-      stored: {
-        start_date: null,
-      },
-      withdrawn: {
-        start_date: { [Op.ne]: null },
-      },
-    };
-
     const { count, rows: deliveries } = await Delivery.findAndCountAll({
       where: {
         product: { [Op.iRegexp]: q },
-        ...data[state],
+        status:
+          state === 'problemas' || state === '' ? { [Op.ne]: null } : state,
+        ...(state === 'problemas' ? { have_problem: true } : ''),
       },
       limit: 10,
       offset: (page - 1) * 10,
@@ -102,14 +89,6 @@ class DeliveryController {
       ],
       order: ['created_at'],
     });
-
-    if (state === 'problems') {
-      const deliveriesWithProblems = deliveries.filter(
-        delivery => delivery.delivery_problems.length
-      );
-
-      return res.json(deliveriesWithProblems);
-    }
 
     res.header('Access-Control-Expose-Headers', 'X-total-count');
 
