@@ -70,7 +70,7 @@ class DeliveryController {
       },
     };
 
-    const deliveries = await Delivery.findAll({
+    const { count, rows: deliveries } = await Delivery.findAndCountAll({
       where: {
         product: { [Op.iRegexp]: q },
         ...data[state],
@@ -111,7 +111,9 @@ class DeliveryController {
       return res.json(deliveriesWithProblems);
     }
 
-    return res.json(deliveries);
+    res.header('Access-Control-Expose-Headers', 'X-total-count');
+
+    return res.append('X-total-count', count).json(deliveries);
   }
 
   async show(req, res) {

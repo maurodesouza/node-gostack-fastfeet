@@ -64,7 +64,7 @@ class RecipientController {
   async index(req, res) {
     const { q, page = 1 } = req.query;
 
-    const recipients = await Recipient.findAll({
+    const { count, rows: recipients } = await Recipient.findAndCountAll({
       where: {
         name: { [Op.iRegexp]: q },
       },
@@ -73,7 +73,9 @@ class RecipientController {
       order: ['created_at'],
     });
 
-    return res.json(recipients);
+    res.header('Access-Control-Expose-Headers', 'X-total-count');
+
+    return res.append('X-total-count', count).json(recipients);
   }
 
   async update(req, res) {

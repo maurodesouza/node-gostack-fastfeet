@@ -45,7 +45,7 @@ class DeliverymanController {
         ? { dismissed_at: { [Op.ne]: null } }
         : { dismissed_at: null };
 
-    const deliveryman = await Deliveryman.findAll({
+    const { count, rows: deliverymans } = await Deliveryman.findAndCountAll({
       where: {
         name: { [Op.iRegexp]: q },
         ...find,
@@ -62,7 +62,9 @@ class DeliverymanController {
       order: ['created_at'],
     });
 
-    return res.json(deliveryman);
+    res.header('Access-Control-Expose-Headers', 'X-total-count');
+
+    return res.append('X-total-count', count).json(deliverymans);
   }
 
   async show(req, res) {
