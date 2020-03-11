@@ -9,6 +9,7 @@ class Delivery extends Model {
         end_date: Sequelize.DATE,
         canceled_at: Sequelize.DATE,
         status: Sequelize.STRING,
+        have_problem: Sequelize.BOOLEAN,
       },
       {
         sequelize,
