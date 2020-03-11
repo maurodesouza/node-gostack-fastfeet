@@ -42,6 +42,12 @@ class DeliveryProblemsController {
 
     if (!delivery) return res.status(400).json({ error: 'Delivery not found' });
 
+    if (!delivery.have_problem) {
+      delivery.have_problem = true;
+
+      await delivery.save();
+    }
+
     const problem = await DeliveryProblem.create({
       description,
       delivery_id,
