@@ -62,13 +62,10 @@ class DeliveryController {
           state === 'problemas' || state === '' ? { [Op.ne]: null } : state,
         ...(state === 'problemas' ? { have_problem: true } : ''),
       },
+      attributes: ['id', 'status', 'have_problem'],
       limit: 10,
       offset: (page - 1) * 10,
       include: [
-        {
-          association: 'delivery_problems',
-          attributes: ['id', 'description'],
-        },
         {
           model: Recipient,
           as: 'recipient',
@@ -105,39 +102,30 @@ class DeliveryController {
       where: {
         id: delivery_id,
       },
+      attributes: [
+        'start_date',
+        'end_date',
+        'canceled_at',
+        'createdAt',
+        'status',
+        'have_problem',
+      ],
       include: [
         {
           association: 'delivery_problems',
-          attributes: ['id', 'description', 'created_at'],
+          attributes: ['id'],
         },
         {
           model: Recipient,
           as: 'recipient',
-          attributes: [
-            'name',
-            'email',
-            'street',
-            'number',
-            'complement',
-            'city',
-            'state',
-            'zip_code',
-          ],
+          attributes: ['street', 'number', 'city', 'state', 'zip_code'],
         },
         {
-          model: Deliveryman,
-          as: 'deliveryman',
-          attributes: ['name', 'email'],
-          include: [
-            {
-              model: File,
-              as: 'avatar',
-              attributes: ['name', 'path', 'url'],
-            },
-          ],
+          model: File,
+          as: 'signature',
+          attributes: ['name', 'path', 'url'],
         },
       ],
-      order: ['created_at'],
     });
 
     if (!delivery) return res.status(400).json({ error: 'Delivery not found' });
