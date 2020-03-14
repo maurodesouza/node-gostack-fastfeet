@@ -10,7 +10,8 @@ module.exports = {
           updated_at: new Date(),
         },
         {
-          description: 'Carga foi molhada',
+          description:
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam a dui eu neque tristique elementum. Cras aliquam elit et risus vehicula molestie. Donec rhoncus nulla at finibus finibus.',
           delivery_id: 4,
           created_at: new Date(),
           updated_at: new Date(),
