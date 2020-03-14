@@ -56,7 +56,36 @@ class DeliveryProblemsController {
     return res.json(problem);
   }
 
-  async update(req, res) {
+  async show(req, res) {
+    const { delivery_id } = req.params;
+
+    if (!Number.isInteger(Number(delivery_id)))
+      return res.status(400).json({ error: 'Passe um ID valido !' });
+
+    const delivery = await Delivery.findOne({
+      where: { id: delivery_id },
+      attributes: ['id', 'have_problem'],
+      include: [
+        {
+          association: 'delivery_problems',
+          attributes: ['id', 'description', 'created_at'],
+          order: ['create_at'],
+        },
+      ],
+    });
+
+    if (!delivery)
+      return res.status(400).json({ error: 'Encomenda não encontrada !' });
+
+    if (!delivery.have_problem)
+      return res
+        .status(400)
+        .json({ error: 'Essa encomenda não possui nenhum problema !' });
+
+    return res.json(delivery);
+  }
+
+  async delete(req, res) {
     const { problem_id } = req.params;
 
     if (!Number.isInteger(Number(problem_id)))
