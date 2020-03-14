@@ -53,19 +53,26 @@ class DeliveryController {
   }
 
   async index(req, res) {
-    const { state, q, page = 1 } = req.query;
+    const { state = '', q = '', page = 1 } = req.query;
 
     const { count, rows: deliveries } = await Delivery.findAndCountAll({
       where: {
         product: { [Op.iRegexp]: q },
-        status:
-          state === 'problemas' || state === '' ? { [Op.ne]: null } : state,
-        ...(state === 'problemas' ? { have_problem: true } : ''),
+        ...(state === '' ? { status: { [Op.ne]: null } } : { status: state }),
+
+        ...(state === 'problemas' && {
+          status: { [Op.notLike]: 'cancelada' },
+          have_problem: true,
+        }),
       },
-      attributes: ['id', 'status', 'have_problem'],
+      attributes: ['id', 'status', 'have_problem', 'created_at'],
       limit: 10,
       offset: (page - 1) * 10,
       include: [
+        {
+          association: 'delivery_problems',
+          attributes: ['id', 'description'],
+        },
         {
           model: Recipient,
           as: 'recipient',
@@ -84,7 +91,7 @@ class DeliveryController {
           ],
         },
       ],
-      order: ['created_at'],
+      order: ['createdAt'],
     });
 
     res.header('Access-Control-Expose-Headers', 'X-total-count');
@@ -113,7 +120,7 @@ class DeliveryController {
       include: [
         {
           association: 'delivery_problems',
-          attributes: ['id'],
+          attributes: ['id', 'description'],
         },
         {
           model: Recipient,
