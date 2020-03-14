@@ -68,15 +68,15 @@ routes.use(authMiddlware);
 
 routes.post('/files', upload.single('file'), FileController.store);
 
-routes.post('/recipient', RecipientController.store);
-routes.get('/recipient', RecipientController.index);
-routes.put('/recipient', RecipientController.update);
+routes.post('/recipients', RecipientController.store);
+routes.get('/recipients', RecipientController.index);
+routes.put('/recipients', RecipientController.update);
 
-routes.post('/deliveryman', DeliverymanController.store);
-routes.get('/deliveryman', DeliverymanController.index);
-routes.get('/deliveryman/:id', DeliverymanController.show);
-routes.put('/deliveryman/:id', DeliverymanController.update);
-routes.delete('/deliveryman/:id', DeliverymanController.delete);
+routes.post('/deliverymans', DeliverymanController.store);
+routes.get('/deliverymans', DeliverymanController.index);
+routes.get('/deliverymans/:id', DeliverymanController.show);
+routes.put('/deliverymans/:id', DeliverymanController.update);
+routes.delete('/deliverymans/:id', DeliverymanController.delete);
 
 routes.post('/deliveries', DeliveryController.store);
 routes.get('/deliveries', DeliveryController.index);
