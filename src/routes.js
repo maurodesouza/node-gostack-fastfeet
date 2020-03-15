@@ -70,7 +70,7 @@ routes.post('/files', upload.single('file'), FileController.store);
 
 routes.post('/recipients', RecipientController.store);
 routes.get('/recipients', RecipientController.index);
-routes.put('/recipients', RecipientController.update);
+routes.put('/recipients/:recipient_id', RecipientController.update);
 routes.delete('/recipients/:recipient_id', RecipientController.delete);
 
 routes.post('/deliverymans', DeliverymanController.store);

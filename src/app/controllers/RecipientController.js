@@ -80,8 +80,12 @@ class RecipientController {
   }
 
   async update(req, res) {
+    const { recipient_id } = req.params;
+
+    if (!Number.isInteger(Number(recipient_id)))
+      return res.status(400).json({ error: 'Envie um ID valido !' });
+
     const schema = Yup.object().shape({
-      id: Yup.number().required(),
       name: Yup.string(),
       email: Yup.string().email(),
       street: Yup.string(),
@@ -98,9 +102,9 @@ class RecipientController {
       return res.status(400).json({ message });
     }
 
-    const { id, email, zip_code } = req.body;
+    const { email, zip_code } = req.body;
 
-    const recipient = await Recipient.findByPk(id);
+    const recipient = await Recipient.findByPk(recipient_id);
 
     if (!recipient)
       return res.status(400).json({ error: 'Recipient not found' });
