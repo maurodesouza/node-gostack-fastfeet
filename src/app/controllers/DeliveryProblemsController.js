@@ -12,10 +12,10 @@ class DeliveryProblemsController {
     const { deliveryman_id, delivery_id } = req.params;
 
     if (!Number.isInteger(Number(deliveryman_id)))
-      return res.status(400).json({ error: 'Deliveryman ID invalid' });
+      return res.status(400).json({ error: 'Envie um ID válido !' });
 
     if (!Number.isInteger(Number(delivery_id)))
-      return res.status(400).json({ error: 'Delivery ID invalid' });
+      return res.status(400).json({ error: 'Envie um ID válido !' });
 
     const { description } = req.body;
 
@@ -34,13 +34,14 @@ class DeliveryProblemsController {
     });
 
     if (!deliveryman)
-      return res.status(400).json({ error: 'Deliveryman not found' });
+      return res.status(400).json({ error: 'Entregador não encontrado !' });
 
     const delivery = await Delivery.findOne({
       where: { id: delivery_id, canceled_at: null, end_date: null },
     });
 
-    if (!delivery) return res.status(400).json({ error: 'Delivery not found' });
+    if (!delivery)
+      return res.status(400).json({ error: 'Encomenda não encontrada !' });
 
     if (!delivery.have_problem) {
       delivery.have_problem = true;
@@ -60,7 +61,7 @@ class DeliveryProblemsController {
     const { delivery_id } = req.params;
 
     if (!Number.isInteger(Number(delivery_id)))
-      return res.status(400).json({ error: 'Passe um ID valido !' });
+      return res.status(400).json({ error: 'Envie um ID valido !' });
 
     const delivery = await Delivery.findOne({
       where: { id: delivery_id },
@@ -89,11 +90,12 @@ class DeliveryProblemsController {
     const { problem_id } = req.params;
 
     if (!Number.isInteger(Number(problem_id)))
-      return res.status(400).json({ error: 'Problem ID invalid' });
+      return res.status(400).json({ error: 'Envie um ID válido !' });
 
     const problem = await DeliveryProblem.findByPk(problem_id);
 
-    if (!problem) return res.status(400).json({ error: 'Problem not found' });
+    if (!problem)
+      return res.status(400).json({ error: 'Problema não encontrado !' });
 
     const { delivery_id, description } = problem;
 
@@ -110,11 +112,13 @@ class DeliveryProblemsController {
 
     if (delivery.end_date)
       return res.status(400).json({
-        error: 'You can not cancel a delivery that already completed',
+        error: 'Você não pode cancelar um encomenda que já foi entregue !',
       });
 
     if (delivery.canceled_at)
-      return res.status(400).json({ error: 'Delivery already canceled' });
+      return res
+        .status(400)
+        .json({ error: 'Essa encomenda já foi cancelada !' });
 
     const deliveryCanceled = await delivery.update({
       canceled_at: new Date(),

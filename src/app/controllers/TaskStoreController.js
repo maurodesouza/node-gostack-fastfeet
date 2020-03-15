@@ -7,14 +7,14 @@ class TaskStoreController {
     const { id: deliveryman_id } = req.params;
 
     if (!Number.isInteger(Number(deliveryman_id)))
-      return res.status(400).json({ error: 'ID invalid' });
+      return res.status(400).json({ error: 'Envie um ID válido !' });
 
     const deliveryman = await Deliveryman.findOne({
       where: { id: deliveryman_id, dismissed_at: null },
     });
 
     if (!deliveryman)
-      return res.status(400).json({ error: 'Delivery man not found' });
+      return res.status(400).json({ error: 'Entregador não encontrado !' });
 
     const deliveries = await Delivery.findAll({
       where: {

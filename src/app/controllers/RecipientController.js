@@ -32,12 +32,12 @@ class RecipientController {
     const recipientExist = await Recipient.findOne({ where: { email } });
 
     if (recipientExist)
-      return res.status(400).json({ error: 'Recipient already exist' });
+      return res.status(400).json({ error: 'Esse email já foi cadastrado !' });
 
     const match = zip_code.match(/\d{5}-\d{3}/g);
 
     if (!(match && match[0] === zip_code))
-      return res.status(400).json({ error: 'Badly formatted zip code' });
+      return res.status(400).json({ error: 'Envie um cep valido !' });
 
     const {
       id,
@@ -121,20 +121,22 @@ class RecipientController {
     const recipient = await Recipient.findByPk(recipient_id);
 
     if (!recipient)
-      return res.status(400).json({ error: 'Recipient not found' });
+      return res.status(400).json({ error: 'Destinatário não encontrado !' });
 
     if (email && email !== recipient.email) {
       const recipientExist = await Recipient.findOne({ where: { email } });
 
       if (recipientExist)
-        return res.status(400).json({ error: 'Recipient already exist' });
+        return res
+          .status(400)
+          .json({ error: 'Esse email já foi cadastrado !' });
     }
 
     if (zip_code && zip_code !== recipient.zip_code) {
       const match = zip_code.match(/\d{5}-\d{3}/g);
 
       if (!(match && match[0] === zip_code))
-        return res.status(400).json({ error: 'Badly formatted zip code' });
+        return res.status(400).json({ error: 'Envie um cep valido !' });
     }
 
     const recipientUpdated = await recipient.update(req.body);

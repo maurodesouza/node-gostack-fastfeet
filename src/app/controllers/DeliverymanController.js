@@ -26,7 +26,7 @@ class DeliverymanController {
     });
 
     if (deliverymanExist)
-      return res.status(400).json({ error: 'Email already registered' });
+      return res.status(400).json({ error: 'Esse email já esta cadastrado !' });
 
     const { id } = await Deliveryman.create(req.body);
 
@@ -71,7 +71,7 @@ class DeliverymanController {
     const { id } = req.params;
 
     if (!Number.isInteger(Number(id)))
-      return res.status(400).json({ error: 'ID invalid' });
+      return res.status(400).json({ error: 'Envie um ID válido !' });
 
     const deliveryman = await Deliveryman.findOne({
       where: { id },
@@ -86,7 +86,7 @@ class DeliverymanController {
     });
 
     if (!deliveryman)
-      return res.status(400).json({ error: 'Delivery man not found' });
+      return res.status(400).json({ error: 'Entregador não encontrado !' });
 
     if (deliveryman.dismissed_at !== null)
       return res.status(400).json({ error: 'This Delivery man was dismissed' });
@@ -110,12 +110,12 @@ class DeliverymanController {
     const { id } = req.params;
 
     if (!Number.isInteger(Number(id)))
-      return res.status(400).json({ error: 'ID invalid' });
+      return res.status(400).json({ error: 'Envie um ID válido !' });
 
     const deliveryman = await Deliveryman.findByPk(id);
 
     if (!deliveryman)
-      return res.status(400).json({ error: 'Delivery man not found' });
+      return res.status(400).json({ error: 'Entregador não encontrado !' });
 
     if (deliveryman.dismissed_at !== null)
       return res.status(400).json({ error: 'This Delivery man was dismissed' });
@@ -128,7 +128,9 @@ class DeliverymanController {
       });
 
       if (deliverymanExist)
-        return res.status(400).json({ error: 'Email already registered' });
+        return res
+          .status(400)
+          .json({ error: 'Esse email já esta cadastrado !' });
     }
 
     const deliverymanUpdate = await deliveryman.update(req.body);
@@ -140,12 +142,12 @@ class DeliverymanController {
     const { id } = req.params;
 
     if (!Number.isInteger(Number(id)))
-      return res.status(400).json({ error: 'ID invalid' });
+      return res.status(400).json({ error: 'Envie um ID válido !' });
 
     const deliveryman = await Deliveryman.findByPk(id);
 
     if (!deliveryman)
-      return res.status(400).json({ error: 'Delivery man not found' });
+      return res.status(400).json({ error: 'Entregador não encontrado !' });
 
     if (deliveryman.dismissed_at !== null)
       return res.status(400).json({ error: 'Delivery man already dismissed' });

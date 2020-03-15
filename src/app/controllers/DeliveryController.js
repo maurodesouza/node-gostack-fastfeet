@@ -32,14 +32,14 @@ class DeliveryController {
     const recipient = await Recipient.findByPk(recipient_id);
 
     if (!recipient)
-      return res.status(400).json({ error: 'Recipient not found' });
+      return res.status(400).json({ error: 'Destinatário não encontrado !' });
 
     const deliveryman = await Deliveryman.findOne({
       where: { id: deliveryman_id, dismissed_at: null },
     });
 
     if (!deliveryman)
-      return res.status(400).json({ error: 'Deliveryman not found' });
+      return res.status(400).json({ error: 'Entregador não encontrado !' });
 
     const delivery = await Delivery.create(req.body);
 
@@ -103,7 +103,7 @@ class DeliveryController {
     const { delivery_id } = req.params;
 
     if (!Number.isInteger(Number(delivery_id)))
-      return res.status(400).json({ error: 'ID invalid' });
+      return res.status(400).json({ error: 'Envie um ID válido !' });
 
     const delivery = await Delivery.findOne({
       where: {
@@ -135,7 +135,8 @@ class DeliveryController {
       ],
     });
 
-    if (!delivery) return res.status(400).json({ error: 'Delivery not found' });
+    if (!delivery)
+      return res.status(400).json({ error: 'Encomenda não encontrada !' });
 
     return res.json(delivery);
   }
@@ -145,12 +146,12 @@ class DeliveryController {
     const { recipient_id, deliveryman_id, product } = req.body;
 
     if (!Number.isInteger(Number(delivery_id)))
-      return res.status(400).json({ error: 'ID invalid' });
+      return res.status(400).json({ error: 'Envie um ID válido !' });
 
     if (!(recipient_id || deliveryman_id || product))
       return res
         .status(400)
-        .json({ error: "You didn't send nothing to be update" });
+        .json({ error: 'Você não enviou nada para ser atualizado !' });
 
     const schema = Yup.object().shape({
       recipient_id: Yup.number().integer(),
@@ -173,13 +174,14 @@ class DeliveryController {
       },
     });
 
-    if (!delivery) return res.status(400).json({ error: 'Delivery not found' });
+    if (!delivery)
+      return res.status(400).json({ error: 'Encomenda não encontrada !' });
 
     if (recipient_id && delivery.recipient_id !== recipient_id) {
       const recipientExist = await Recipient.findByPk(recipient_id);
 
       if (!recipientExist)
-        return res.status(400).json({ error: 'Recipient not found' });
+        return res.status(400).json({ error: 'Destinatário não encontrado !' });
     }
 
     if (deliveryman_id && delivery.deliveryman_id !== deliveryman_id) {
@@ -188,7 +190,7 @@ class DeliveryController {
       });
 
       if (!deliverymanExist)
-        return res.status(400).json({ error: 'Deliveryman not found' });
+        return res.status(400).json({ error: 'Entregador não encontrado !' });
     }
 
     const deliveryUpdate = await delivery.update(req.body);
@@ -200,11 +202,12 @@ class DeliveryController {
     const { delivery_id } = req.params;
 
     if (!Number.isInteger(Number(delivery_id)))
-      return res.status(400).json({ error: 'ID invalid' });
+      return res.status(400).json({ error: 'Envie um ID válido !' });
 
     const delivery = await Delivery.findByPk(delivery_id);
 
-    if (!delivery) return res.status(400).json({ error: 'Delivery not found' });
+    if (!delivery)
+      return res.status(400).json({ error: 'Encomenda não encontrada !' });
 
     await delivery.destroy();
 

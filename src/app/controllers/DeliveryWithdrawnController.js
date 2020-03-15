@@ -21,23 +21,23 @@ class DeliveryWithdrawnController {
       })
     )
       return res.status(400).json({
-        error: 'You can only withdraw the deliveries between 08:00h and 18:00h',
+        error: 'Você só pode fazer retiradas entre às 08:00h e 18:00h',
       });
 
     const { deliveryman_id, delivery_id } = req.params;
 
     if (!Number.isInteger(Number(deliveryman_id)))
-      return res.status(400).json({ error: 'Deliveryman ID invalid' });
+      return res.status(400).json({ error: 'Envie um ID válido !' });
 
     if (!Number.isInteger(Number(delivery_id)))
-      return res.status(400).json({ error: 'Delivery ID invalid' });
+      return res.status(400).json({ error: 'Envie um ID válido !' });
 
     const deliveryman = await Deliveryman.findOne({
       where: { id: deliveryman_id, dismissed_at: null },
     });
 
     if (!deliveryman)
-      return res.status(400).json({ error: 'Deliveryman not found' });
+      return res.status(400).json({ error: 'Entregador não encontrado !' });
 
     const deliveriesOfTheDay = await Delivery.findAll({
       where: {
@@ -52,7 +52,7 @@ class DeliveryWithdrawnController {
     if (deliveriesOfTheDay.length > 5)
       return res
         .status(400)
-        .json({ error: 'You can only make five deliveries a day' });
+        .json({ error: 'Você só pode fazer cinco retiradas por dia !' });
 
     const delivery = await Delivery.findOne({
       where: {
@@ -64,10 +64,13 @@ class DeliveryWithdrawnController {
       attributes: ['id', 'product', 'start_date', 'created_at'],
     });
 
-    if (!delivery) return res.status(400).json({ error: 'Delivery not found' });
+    if (!delivery)
+      return res.status(400).json({ error: 'Encomenda não encontrada !' });
 
     if (delivery.start_date)
-      return res.status(400).json({ error: 'Delivery already withdrawn' });
+      return res
+        .status(400)
+        .json({ error: 'Essa encomenda já foi retirada !' });
 
     delivery.start_date = currentDate;
     delivery.status = 'retirada';

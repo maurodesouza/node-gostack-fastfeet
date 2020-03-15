@@ -2,14 +2,15 @@ import { setLocale } from 'yup';
 
 setLocale({
   mixed: {
-    required: ({ path }) => `The ${path} field is required`,
-    notType: ({ path, type }) => `The ${path} field must be ${type} type`,
+    required: ({ path }) => `O campo ${path} é obrigatório !`,
+    notType: ({ path, type }) => `O campo ${path} deve ser do tipo ${type}`,
   },
   string: {
-    email: ({ value }) => `${value} is not a email valid`,
+    email: ({ value }) => `${value} não é um email válido !`,
   },
   number: {
-    integer: ({ path, value }) => `${path} field: ${value} is not an integer`,
+    integer: ({ path }) =>
+      `O campo ${path} precisa receber um numero inteiro !`,
   },
 });
 
