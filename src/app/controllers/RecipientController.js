@@ -79,6 +79,20 @@ class RecipientController {
     return res.append('X-total-count', count).json(recipients);
   }
 
+  async show(req, res) {
+    const { recipient_id } = req.params;
+
+    if (!Number.isInteger(Number(recipient_id)))
+      return res.status(400).json({ error: 'Envie um ID valido !' });
+
+    const recipient = await Recipient.findByPk(recipient_id);
+
+    if (!recipient)
+      return res.status(400).json({ error: 'Destinatário não encontrado !' });
+
+    return res.json(recipient);
+  }
+
   async update(req, res) {
     const { recipient_id } = req.params;
 
