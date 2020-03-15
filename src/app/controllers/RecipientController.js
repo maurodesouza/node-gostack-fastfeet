@@ -1,6 +1,7 @@
 import * as Yup from 'yup';
 import { Op } from 'sequelize';
 
+import Delivery from '../models/Delivery';
 import Recipient from '../models/Recipient';
 
 class RecipientController {
@@ -121,6 +122,35 @@ class RecipientController {
     const recipientUpdated = await recipient.update(req.body);
 
     return res.json(recipientUpdated);
+  }
+
+  async delete(req, res) {
+    const { recipient_id } = req.params;
+
+    if (!Number.isInteger(Number(recipient_id)))
+      return res.status(400).json({ error: 'Envie um ID valido !' });
+
+    const recipient = await Recipient.findByPk(recipient_id);
+
+    if (!recipient)
+      return res.status(400).json({ error: 'Destinatario não encontrado !' });
+
+    const deliveries = await Delivery.findOne({
+      where: {
+        recipient_id,
+        status: { [Op.or]: ['pendente', 'retirada'] },
+      },
+    });
+
+    if (deliveries)
+      return res.status(401).json({
+        error:
+          'Não é possivel excluir um destinatário com alguma encomenda pendente ou em andamento !',
+      });
+
+    await recipient.destroy();
+
+    return res.json();
   }
 }
 
