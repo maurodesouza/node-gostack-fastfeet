@@ -76,9 +76,9 @@ routes.delete('/recipients/:recipient_id', RecipientController.delete);
 
 routes.post('/deliverymans', DeliverymanController.store);
 routes.get('/deliverymans', DeliverymanController.index);
-routes.get('/deliverymans/:id', DeliverymanController.show);
-routes.put('/deliverymans/:id', DeliverymanController.update);
-routes.delete('/deliverymans/:id', DeliverymanController.delete);
+routes.get('/deliverymans/:deliveryman_id', DeliverymanController.show);
+routes.put('/deliverymans/:deliveryman_id', DeliverymanController.update);
+routes.delete('/deliverymans/:deliveryman_id', DeliverymanController.delete);
 
 routes.post('/deliveries', DeliveryController.store);
 routes.get('/deliveries', DeliveryController.index);

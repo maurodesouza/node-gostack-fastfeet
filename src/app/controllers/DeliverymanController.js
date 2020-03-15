@@ -2,6 +2,7 @@ import * as Yup from 'yup';
 import { Op } from 'sequelize';
 
 import File from '../models/File';
+import Delivery from '../models/Delivery';
 import Deliveryman from '../models/Deliveryman';
 
 class DeliverymanController {
@@ -38,17 +39,11 @@ class DeliverymanController {
   }
 
   async index(req, res) {
-    const { state, q, page = 1 } = req.query;
-
-    const find =
-      state === 'dismissed'
-        ? { dismissed_at: { [Op.ne]: null } }
-        : { dismissed_at: null };
+    const { q, page = 1 } = req.query;
 
     const { count, rows: deliverymans } = await Deliveryman.findAndCountAll({
       where: {
         name: { [Op.iRegexp]: q },
-        ...find,
       },
       limit: 10,
       offset: (page - 1) * 10,
@@ -68,13 +63,13 @@ class DeliverymanController {
   }
 
   async show(req, res) {
-    const { id } = req.params;
+    const { deliveryman_id } = req.params;
 
-    if (!Number.isInteger(Number(id)))
+    if (!Number.isInteger(Number(deliveryman_id)))
       return res.status(400).json({ error: 'Envie um ID válido !' });
 
     const deliveryman = await Deliveryman.findOne({
-      where: { id },
+      where: { id: deliveryman_id },
       attributes: ['id', 'name', 'email', 'avatar_id'],
       include: [
         {
@@ -87,9 +82,6 @@ class DeliverymanController {
 
     if (!deliveryman)
       return res.status(400).json({ error: 'Entregador não encontrado !' });
-
-    if (deliveryman.dismissed_at !== null)
-      return res.status(400).json({ error: 'This Delivery man was dismissed' });
 
     return res.json(deliveryman);
   }
@@ -107,18 +99,15 @@ class DeliverymanController {
       return res.status(400).json({ message });
     }
 
-    const { id } = req.params;
+    const { deliveryman_id } = req.params;
 
-    if (!Number.isInteger(Number(id)))
+    if (!Number.isInteger(Number(deliveryman_id)))
       return res.status(400).json({ error: 'Envie um ID válido !' });
 
-    const deliveryman = await Deliveryman.findByPk(id);
+    const deliveryman = await Deliveryman.findByPk(deliveryman_id);
 
     if (!deliveryman)
       return res.status(400).json({ error: 'Entregador não encontrado !' });
-
-    if (deliveryman.dismissed_at !== null)
-      return res.status(400).json({ error: 'This Delivery man was dismissed' });
 
     const { email } = req.body;
 
@@ -139,22 +128,30 @@ class DeliverymanController {
   }
 
   async delete(req, res) {
-    const { id } = req.params;
+    const { deliveryman_id } = req.params;
 
-    if (!Number.isInteger(Number(id)))
+    if (!Number.isInteger(Number(deliveryman_id)))
       return res.status(400).json({ error: 'Envie um ID válido !' });
 
-    const deliveryman = await Deliveryman.findByPk(id);
+    const deliveryman = await Deliveryman.findByPk(deliveryman_id);
 
     if (!deliveryman)
       return res.status(400).json({ error: 'Entregador não encontrado !' });
 
-    if (deliveryman.dismissed_at !== null)
-      return res.status(400).json({ error: 'Delivery man already dismissed' });
+    const delivery = await Delivery.findOne({
+      where: {
+        deliveryman_id,
+        status: { [Op.or]: ['pendente', 'retirada'] },
+      },
+    });
 
-    deliveryman.dismissed_at = new Date();
+    if (delivery)
+      return res.status(401).json({
+        error:
+          'Não é possivel excluir um entregador com alguma encomenda pendente ou em andamento !',
+      });
 
-    await deliveryman.save();
+    await deliveryman.destroy();
 
     return res.json();
   }
