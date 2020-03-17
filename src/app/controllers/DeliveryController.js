@@ -35,7 +35,7 @@ class DeliveryController {
       return res.status(400).json({ error: 'Destinatário não encontrado !' });
 
     const deliveryman = await Deliveryman.findOne({
-      where: { id: deliveryman_id, dismissed_at: null },
+      where: { id: deliveryman_id },
     });
 
     if (!deliveryman)
@@ -55,16 +55,21 @@ class DeliveryController {
   async index(req, res) {
     const { state = '', q = '', page = 1 } = req.query;
 
-    const { count, rows: deliveries } = await Delivery.findAndCountAll({
-      where: {
-        product: { [Op.iRegexp]: q },
-        ...(state === '' ? { status: { [Op.ne]: null } } : { status: state }),
+    const query = {
+      product: { [Op.iRegexp]: q },
+      ...(state === '' ? { status: { [Op.ne]: null } } : { status: state }),
 
-        ...(state === 'problemas' && {
-          status: { [Op.notLike]: 'cancelada' },
-          have_problem: true,
-        }),
-      },
+      ...(state === 'problemas' && {
+        status: { [Op.notLike]: 'cancelada' },
+        have_problem: true,
+      }),
+    };
+
+    const count = await Delivery.count({ where: query });
+
+    const deliveries = await Delivery.findAll({
+      where: query,
+
       attributes: ['id', 'status', 'have_problem', 'created_at'],
       limit: 10,
       offset: (page - 1) * 10,
@@ -91,7 +96,7 @@ class DeliveryController {
           ],
         },
       ],
-      order: ['createdAt'],
+      order: [['created_at', 'DESC']],
     });
 
     res.header('Access-Control-Expose-Headers', 'X-total-count');
@@ -116,6 +121,7 @@ class DeliveryController {
         'createdAt',
         'status',
         'have_problem',
+        'product',
       ],
       include: [
         {
@@ -125,7 +131,14 @@ class DeliveryController {
         {
           model: Recipient,
           as: 'recipient',
-          attributes: ['street', 'number', 'city', 'state', 'zip_code'],
+          attributes: {
+            exclude: ['createdAt', 'updatedAt', 'email', 'complement'],
+          },
+        },
+        {
+          model: Deliveryman,
+          as: 'deliveryman',
+          attributes: ['id', 'name'],
         },
         {
           model: File,
@@ -165,17 +178,15 @@ class DeliveryController {
       return res.status(400).json({ message });
     }
 
-    const delivery = await Delivery.findOne({
-      where: {
-        id: delivery_id,
-        start_date: null,
-        end_date: null,
-        canceled_at: null,
-      },
-    });
+    const delivery = await Delivery.findByPk(delivery_id);
 
     if (!delivery)
       return res.status(400).json({ error: 'Encomenda não encontrada !' });
+
+    if (delivery.start_date || delivery.end_date || delivery.canceled_at)
+      return res.status(401).json({
+        error: 'Você só pode editar encomendas que estão pendentes !',
+      });
 
     if (recipient_id && delivery.recipient_id !== recipient_id) {
       const recipientExist = await Recipient.findByPk(recipient_id);
@@ -186,7 +197,7 @@ class DeliveryController {
 
     if (deliveryman_id && delivery.deliveryman_id !== deliveryman_id) {
       const deliverymanExist = await Deliveryman.findOne({
-        where: { id: deliveryman_id, dismissed_at: null },
+        where: { id: deliveryman_id },
       });
 
       if (!deliverymanExist)
