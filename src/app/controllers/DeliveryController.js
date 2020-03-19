@@ -220,6 +220,11 @@ class DeliveryController {
     if (!delivery)
       return res.status(400).json({ error: 'Encomenda não encontrada !' });
 
+    if (delivery.status === 'retirada' || delivery.status === 'pendente')
+      return res.status(401).json({
+        error: 'Você só pode deletar encomendas canceladas ou já concluidas !',
+      });
+
     await delivery.destroy();
 
     return res.json();
