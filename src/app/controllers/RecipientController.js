@@ -71,7 +71,7 @@ class RecipientController {
       },
       limit: 10,
       offset: (page - 1) * 10,
-      order: ['created_at'],
+      order: [['created_at', 'DESC']],
     });
 
     res.header('Access-Control-Expose-Headers', 'X-total-count');

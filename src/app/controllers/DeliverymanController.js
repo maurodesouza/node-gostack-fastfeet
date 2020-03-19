@@ -54,7 +54,7 @@ class DeliverymanController {
           attributes: ['name', 'path', 'url'],
         },
       ],
-      order: ['created_at'],
+      order: [['created_at', 'DESC']],
     });
 
     res.header('Access-Control-Expose-Headers', 'X-total-count');
