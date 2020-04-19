@@ -7,7 +7,7 @@ export default async (req, res, next) => {
   const { authorization } = req.headers;
 
   if (!authorization)
-    return res.status(401).json({ error: 'Token not provide' });
+    return res.status(401).json({ error: 'Token não encontrado !' });
 
   const [, token] = authorization.split(' ');
 
@@ -16,6 +16,9 @@ export default async (req, res, next) => {
 
     return next();
   } catch (err) {
-    return res.status(401).json({ error: 'Token invalid' });
+    return res.status(401).json({
+      error: 'Token invalido !',
+      type: err.name,
+    });
   }
 };

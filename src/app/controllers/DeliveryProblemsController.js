@@ -9,15 +9,15 @@ import DeliveryProblem from '../models/DeliveryProblem';
 
 class DeliveryProblemsController {
   async store(req, res) {
-    const { deliveryman_id, delivery_id } = req.params;
-
-    if (!Number.isInteger(Number(deliveryman_id)))
-      return res.status(400).json({ error: 'Envie um ID válido !' });
+    const { delivery_id } = req.params;
 
     if (!Number.isInteger(Number(delivery_id)))
       return res.status(400).json({ error: 'Envie um ID válido !' });
 
-    const { description } = req.body;
+    const { description, deliveryman_id } = req.body;
+
+    if (!Number.isInteger(Number(deliveryman_id)))
+      return res.status(400).json({ error: 'Envie um ID válido !' });
 
     const schema = Yup.object().shape({
       description: Yup.string().required(),
@@ -29,19 +29,23 @@ class DeliveryProblemsController {
       return res.status(400).json({ message });
     }
 
-    const deliveryman = await Deliveryman.findOne({
-      where: { id: deliveryman_id, dismissed_at: null },
-    });
-
-    if (!deliveryman)
-      return res.status(400).json({ error: 'Entregador não encontrado !' });
-
-    const delivery = await Delivery.findOne({
-      where: { id: delivery_id, canceled_at: null, end_date: null },
-    });
+    const delivery = await Delivery.findByPk(delivery_id);
 
     if (!delivery)
       return res.status(400).json({ error: 'Encomenda não encontrada !' });
+
+    if (delivery.canceled_at)
+      return res.status(400).json({ error: 'Essa encomenda foi cancelada !' });
+
+    if (delivery.end_date)
+      return res
+        .status(400)
+        .json({ error: 'Essa encomenda já foi entregue !' });
+
+    if (delivery.deliveryman_id !== deliveryman_id)
+      return res
+        .status(400)
+        .json({ error: 'Essa encomenda pertence a outro entregador !' });
 
     if (!delivery.have_problem) {
       delivery.have_problem = true;
@@ -70,9 +74,9 @@ class DeliveryProblemsController {
         {
           association: 'delivery_problems',
           attributes: ['id', 'description', 'created_at'],
-          order: ['create_at'],
         },
       ],
+      order: [['delivery_problems', 'created_at', 'DESC']],
     });
 
     if (!delivery)

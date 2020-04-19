@@ -8,7 +8,6 @@ import {
 } from 'date-fns';
 
 import Delivery from '../models/Delivery';
-import Deliveryman from '../models/Deliveryman';
 
 class DeliveryWithdrawnController {
   async update(req, res) {
@@ -24,7 +23,8 @@ class DeliveryWithdrawnController {
         error: 'Você só pode fazer retiradas entre às 08:00h e 18:00h',
       });
 
-    const { deliveryman_id, delivery_id } = req.params;
+    const { delivery_id } = req.params;
+    const { deliveryman_id } = req.body;
 
     if (!Number.isInteger(Number(deliveryman_id)))
       return res.status(400).json({ error: 'Envie um ID válido !' });
@@ -32,14 +32,7 @@ class DeliveryWithdrawnController {
     if (!Number.isInteger(Number(delivery_id)))
       return res.status(400).json({ error: 'Envie um ID válido !' });
 
-    const deliveryman = await Deliveryman.findOne({
-      where: { id: deliveryman_id, dismissed_at: null },
-    });
-
-    if (!deliveryman)
-      return res.status(400).json({ error: 'Entregador não encontrado !' });
-
-    const deliveriesOfTheDay = await Delivery.findAll({
+    const deliveriesOfTheDay = await Delivery.count({
       where: {
         deliveryman_id,
         canceled_at: null,
@@ -49,18 +42,13 @@ class DeliveryWithdrawnController {
       },
     });
 
-    if (deliveriesOfTheDay.length > 5)
+    if (deliveriesOfTheDay > 5)
       return res
         .status(400)
         .json({ error: 'Você só pode fazer cinco retiradas por dia !' });
 
     const delivery = await Delivery.findOne({
-      where: {
-        id: delivery_id,
-        deliveryman_id,
-        end_date: null,
-        canceled_at: null,
-      },
+      where: { id: delivery_id, deliveryman_id },
       attributes: ['id', 'product', 'start_date', 'created_at'],
     });
 
@@ -71,6 +59,14 @@ class DeliveryWithdrawnController {
       return res
         .status(400)
         .json({ error: 'Essa encomenda já foi retirada !' });
+
+    if (delivery.end_date)
+      return res
+        .status(400)
+        .json({ error: 'Essa encomenda já foi entregue !' });
+
+    if (delivery.canceled_at)
+      return res.status(400).json({ error: 'Essa encomenda foi cancelada !' });
 
     delivery.start_date = currentDate;
     delivery.status = 'retirada';

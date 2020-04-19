@@ -115,6 +115,7 @@ class DeliveryController {
         id: delivery_id,
       },
       attributes: [
+        'id',
         'start_date',
         'end_date',
         'canceled_at',
