@@ -77,6 +77,7 @@ Para instalar e executar o projeto você precisa:
 Você criar os banco de dados `Postgres` e `Redis` utilizando o `docker`:
 
 `docker run --name nomeDoContainer -e POSTGRES_PASSWORD=umaSenha -p 5432:5432 -d postgres`
+
 `docker run --name nomeDoContainer -p 6379:6379 -d -t redis:alpine`
 
 Para mais detalhes sobre o desafio de cada módulo, veja:
