@@ -32,7 +32,7 @@ Para ver o projeto web :point_right: [Clique Aqui](https://github.com/maurodesou
 
 Para ver o projeto mobile :point_right: [Clique Aqui](https://github.com/maurodesouza/mobile-gostack-fastfeet) :point_left:
 
-##### Funcionalidades do administrador: #####
+#### Funcionalidades do administrador: ####
 
 - O administrador pode se `autenticar` na aplicação utilizando e-mail e uma senha.
 &nbsp;
@@ -49,7 +49,7 @@ Para ver o projeto mobile :point_right: [Clique Aqui](https://github.com/maurode
 &nbsp;
 - Todas as paginas de listagem possuem `paginação` e um `campo para pesquisa`.
 
-###### Funcionalidades do entregador: ######
+#### Funcionalidades do entregador: ####
 - O entregador pode acessar a aplicação informando o seu id de cadastro;
 &nbsp;
 - Visualizar as encomendas - o entregador pode visualizar as encomendas atribuídas a ele, que não estejam entregues ou canceladas;
