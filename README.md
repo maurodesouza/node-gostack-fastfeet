@@ -74,7 +74,7 @@ Para instalar e executar o projeto você precisa:
 10. Rodar `yarn dev` para inicializar a aplicação;
 11. Rodar `yarn queue` para inicializar o servidor de envio de emails;
 
-Você criar os banco de dados `Postgres` e `Redis` utilizando o `docker`:
+Você pode criar os bancos de dados utilizando o `docker`:
 
 `docker run --name nomeDoContainer -e POSTGRES_PASSWORD=umaSenha -p 5432:5432 -d postgres`
 
